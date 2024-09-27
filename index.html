@@ -102,6 +102,7 @@
                 type="text"
                 class="w-full p-2 bg-gray-800 text-white rounded"
                 placeholder="Nom du monstre"
+                v-model="inputMonster.name"
               />
             </div>
 
@@ -113,6 +114,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="PV"
+                  v-model="inputMonster.pv"
                 />
               </div>
               <div>
@@ -121,6 +123,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Attaque"
+                  v-model="inputMonster.attaque"
                 />
               </div>
             </div>
@@ -130,12 +133,13 @@
               <textarea
                 class="w-full p-2 bg-gray-800 text-white rounded"
                 placeholder="Description du monstre"
+                v-model="inputMonster.description"
               ></textarea>
             </div>
 
             <div>
               <label class="block mb-2">Type de Monstre</label>
-              <select class="w-full p-2 bg-gray-800 text-white rounded">
+              <select class="w-full p-2 bg-gray-800 text-white rounded" v-model="inputMonster.type">
                 <option value="aquatique">Aquatique</option>
                 <option value="terrestre">Terrestre</option>
                 <option value="volant">Volant</option>
@@ -146,6 +150,7 @@
 
             <button
               class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              @click.prevent="addOne()"
             >
               Ajouter Monstre
             </button>
@@ -222,21 +227,26 @@
       <!-- Liste des monstres à droite -->
       <section class="w-2/3 p-6">
         <h2 class="text-3xl monster-header mb-6">Monstres Actuels</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            
           <!-- Carte de monstre -->
-          <div
+        
+            <li
             class="monster-card bg-gray-700 rounded-lg shadow-lg p-6"
             data-monster-type="aquatique"
-          >
+            v-for="monster in monsters"
+            :key="monster.id">
+          
+
             <img
-              src="documents/images/aqualizzard.png"
+              :src="monster.selectedImage"
               class="w-full h-40 object-cover rounded mb-4"
             />
-            <h3 class="text-xl font-bold">Aqualizzard</h3>
-            <p class="text-gray-300 text-sm mb-4">Monster Description</p>
+            <h3 class="text-xl font-bold">{{ monster.name }}</h3>
+            <p class="text-gray-300 text-sm mb-4">{{ monster.description }}</p>
             <div class="flex justify-between items-center mb-2">
-              <span>PV: 50</span>
-              <span>Attaque: 50</span>
+              <span>PV: {{ monster.pv }}</span>
+              <span>Attaque: {{ monster.attaque }}</span>
             </div>
             <div class="text-right">
               <button
@@ -250,8 +260,8 @@
                 Supprimer
               </button>
             </div>
-          </div>
-        </div>
+         </li>
+        </ul>
       </section>
     </div>
 
@@ -263,7 +273,7 @@
     </footer>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-        //Initialisation du localStorage
+//Initialisation du localStorage
         // localStorage.monsters = JSON.stringify([
         //   {
         //     id: Date.now(),
@@ -271,28 +281,86 @@
         //     description: "Monster Description",
         //     pv: 50,
         //     attaque: 50,
-        //     type: "aquatique"
+        //     type: "aquatique",
+        //     selectedImage: 'documents/images/aqualizzard.png',
         //   },
         // ]);
-  
+
 
         Vue.createApp({
           data() {
             return {
-                //Aller chercher ce qu'il y a dans le localstorage ou prendre un tableau indexés vide!
-                contacts: JSON.parse(localStorage.getItem("monsters")) || [],
+               //Aller chercher ce qu'il y a dans le localstorage ou prendre un tableau indexés vide!
+                monsters: JSON.parse(localStorage.getItem("monsters")) || [],
                 inputMonster: {
+                    id: null,
                     name: "",
                     description: "",
                     pv: "",
                     attaque: "",
                     type: "",
-                    id: null,
+                    selectedImage: null,
                 },
+                
+                images: [
+                    "documents/images/abyssalshark.png",
+                    "documents/images/aquadragon.png",
+                    "documents/images/aqualizzard.png",
+                    "documents/images/cosmoserpent.png",
+                    "documents/images/crystalunicorn.png",
+                    "documents/images/earthbear.png",
+                    "documents/images/earthelemental.png",
+                    "documents/images/firelion.png",
+                    "documents/images/flamedragon.png",
+                    "documents/images/flamesprite.png",
+                    "documents/images/frostelf.png",
+                    "documents/images/ghostphantom.png",
+                    "documents/images/icepixie.png",
+                    "documents/images/icewolf.png",
+                    "documents/images/infernopixie.png",
+                    "documents/images/lavagiant.png",
+                    "documents/images/lightningcheetah.png",
+                    "documents/images/magmatroll.png",
+                    "documents/images/mysticdragon.png",
+                    "documents/images/rockgolem.png",
+                    "documents/images/rockmountain.png",
+                    "documents/images/shadowbat.png",
+                    "documents/images/shadowmonkey.png",
+                    "documents/images/skyeagle.png",
+                    "documents/images/skyphoenix.png",
+                    "documents/images/spectralspirit.png",
+                    "documents/images/spiritshade.png",
+                    "documents/images/stonegiant.png",
+                    "documents/images/stormeagle.png",
+                    "documents/images/stormrider.png",
+                    "documents/images/terrawolf.png",
+                    "documents/images/thunderserpent.png",
+                    "documents/images/umbraroot.png",
+                    "documents/images/voidworm.png",
+                    "documents/images/windfalcon.png",
+                ],
+                
             };
           },
           methods: {
-           
+            addOne() {
+                this.inputMonster.id = Date.now();
+                this.inputMonster.selectedImage = this.randomItem(this.images)
+                this.monsters.push({ ...this.inputMonster });
+                this.resetForm();
+            },
+            resetForm() {
+                this.inputMonster.attaque = "";
+                this.inputMonster.description = "";
+                this.inputMonster.type = "";
+                this.inputMonster.pv = "";
+                this.inputMonster.name = "";
+                this.inputMonster.id = null;
+                this.selectedImage = null;
+            },
+            randomItem (items) {
+                return items[Math.floor(Math.random()*items.length)];
+            }, 
           },
           computed: {
             
