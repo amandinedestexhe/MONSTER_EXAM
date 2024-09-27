@@ -264,16 +264,16 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         //Initialisation du localStorage
-        localStorage.monsters = JSON.stringify([
-          {
-            id: Date.now(),
-            name: "Aqualizzard",
-            description: "Monster Description",
-            pv: 50,
-            attaque: 50,
-            type: "aquatique"
-          },
-        ]);
+        // localStorage.monsters = JSON.stringify([
+        //   {
+        //     id: Date.now(),
+        //     name: "Aqualizzard",
+        //     description: "Monster Description",
+        //     pv: 50,
+        //     attaque: 50,
+        //     type: "aquatique"
+        //   },
+        // ]);
   
 
         Vue.createApp({
@@ -290,6 +290,13 @@
           },
   
           watch: {
+            monsters: {
+              handler(newValue, oldValue) {
+                //mettre à jour le localStorage
+                localStorage.setItem("monsters", JSON.stringify(newValue));
+              },
+              deep: true,
+            },
             
           },
         }).mount("#app");
