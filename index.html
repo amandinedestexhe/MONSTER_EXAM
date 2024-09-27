@@ -256,6 +256,7 @@
               </button>
               <button
                 class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="deleteOneById(monster.id)"
               >
                 Supprimer
               </button>
@@ -358,9 +359,28 @@
                 this.inputMonster.id = null;
                 this.selectedImage = null;
             },
-            randomItem (items) {
-                return items[Math.floor(Math.random()*items.length)];
-            }, 
+            randomItem(items) {
+                if (items.length === 0) {
+                    throw new Error("Vous avez atteint le nombre maximum de monstre, passer à la version Prenium!");
+                }
+                
+                const index = Math.floor(Math.random() * items.length);
+                const selectedItem = items[index];
+                
+                // Supprimer l'élément sélectionné de la liste
+                items.splice(index, 1);
+                
+                return selectedItem;
+            },
+
+            deleteOneById(id) {
+            this.monsters.splice(this.findIndexById(id), 1);
+            },
+
+            findIndexById(id) {
+            return this.monsters.findIndex((monster) => monster.id === id);
+          },
+
           },
           computed: {
             
