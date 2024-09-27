@@ -279,7 +279,16 @@
         Vue.createApp({
           data() {
             return {
-             
+                //Aller chercher ce qu'il y a dans le localstorage ou prendre un tableau indexés vide!
+                contacts: JSON.parse(localStorage.getItem("monsters")) || [],
+                inputMonster: {
+                    name: "",
+                    description: "",
+                    pv: "",
+                    attaque: "",
+                    type: "",
+                    id: null,
+                },
             };
           },
           methods: {
