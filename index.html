@@ -244,7 +244,7 @@
             <li
             class="monster-card bg-gray-700 rounded-lg shadow-lg p-6"
             data-monster-type="aquatique"
-            v-for="monster in monsters"
+            v-for="monster in sortedMonsters"
             :key="monster.id">
           
 
@@ -297,6 +297,10 @@
         //     selectedImage: 'documents/images/aqualizzard.png',
         //   },
         // ]);
+
+
+
+
 
         Vue.createApp({
           data() {
@@ -411,6 +415,13 @@
 
           },
           computed: {
+            sortedMonsters() {
+            return this.monsters.sort((a, b) => {
+              return a.name.localeCompare(b.name);
+            });
+
+          },
+
             
           },
   
