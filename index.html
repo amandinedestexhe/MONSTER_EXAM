@@ -88,13 +88,15 @@
           </div>
         </header>
         <div class="flex">
-          <button class="tab-button active">Ajouter un Monstre</button>
+          <button class="tab-button active" v-if="!isEditing">Ajouter un Monstre</button>
+          <button class="tab-button active"  v-if="isEditing">Modifier un Monstre</button>
           <button class="tab-button">Filtres</button>
         </div>
 
         <!-- Contenu des onglets -->
         <div id="form" class="tab-content active">
-          <h2 class="text-3xl monster-header mb-6">Ajouter un Monstre</h2>
+          <h2 class="text-3xl monster-header mb-6" v-if="!isEditing">Ajouter un Monstre</h2>
+          <h2 class="text-3xl monster-header mb-6" v-if="isEditing">Modifier un Monstre</h2>
           <form class="grid grid-cols-1 gap-4">
             <div>
               <label class="block mb-2">Nom du Monstre</label>
@@ -150,9 +152,17 @@
 
             <button
               class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              v-if="!isEditing"
               @click.prevent="addOne()"
             >
               Ajouter Monstre
+            </button>
+            <button
+              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              v-if="isEditing"
+              @click.prevent="updateOneById(inputMonster.id)"
+            >
+              Modifier Monstre
             </button>
           </form>
         </div>
@@ -251,6 +261,7 @@
             <div class="text-right">
               <button
                 class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="editOneById(monster.id)"
               >
                 Modifier
               </button>
@@ -287,7 +298,6 @@
         //   },
         // ]);
 
-
         Vue.createApp({
           data() {
             return {
@@ -301,12 +311,13 @@
                     attaque: "",
                     type: "",
                     selectedImage: null,
+                    
                 },
+                isEditing: false,
                 
                 images: [
                     "documents/images/abyssalshark.png",
                     "documents/images/aquadragon.png",
-                    "documents/images/aqualizzard.png",
                     "documents/images/cosmoserpent.png",
                     "documents/images/crystalunicorn.png",
                     "documents/images/earthbear.png",
@@ -357,29 +368,46 @@
                 this.inputMonster.pv = "";
                 this.inputMonster.name = "";
                 this.inputMonster.id = null;
-                this.selectedImage = null;
+                this.inputMonster.selectedImage = null;
+                this.isEditing = false;
             },
-            randomItem(items) {
-                if (items.length === 0) {
+            randomItem() {
+                if (images.length === 0) {
                     throw new Error("Vous avez atteint le nombre maximum de monstre, passer à la version Prenium!");
                 }
                 
-                const index = Math.floor(Math.random() * items.length);
-                const selectedItem = items[index];
+                const index = Math.floor(Math.random() * images.length);
+                const selectedItem = images[index];
                 
                 // Supprimer l'élément sélectionné de la liste
-                items.splice(index, 1);
+                images.splice(index, 1);
                 
                 return selectedItem;
             },
 
             deleteOneById(id) {
-            this.monsters.splice(this.findIndexById(id), 1);
+              this.images = { ...this.inputMonster.selectedImage };
+              this.monsters.splice(this.findIndexById(id), 1);
             },
 
             findIndexById(id) {
-            return this.monsters.findIndex((monster) => monster.id === id);
-          },
+              return this.monsters.findIndex((monster) => monster.id === id);
+            },
+            
+
+            findOneById(id) {
+            return this.monsters.find((monster) => monster.id === id);
+            },
+
+            editOneById(id) {
+              this.inputMonster = { ...this.findOneById(id) };
+              this.isEditing = true; // mode modification
+            },
+
+            updateOneById(id) {
+              this.monsters[this.findIndexById(id)] = { ...this.inputMonster };
+              this.resetForm();
+            },
 
           },
           computed: {
