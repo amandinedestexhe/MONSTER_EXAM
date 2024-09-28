@@ -177,6 +177,7 @@
                 type="text"
                 class="w-full p-2 bg-gray-800 text-white rounded"
                 placeholder="Nom du monstre"
+                v-model="searchQuery"
               />
             </div>
 
@@ -221,7 +222,7 @@
 
             <div>
               <label class="block mb-2">Type de Monstre</label>
-              <select class="w-full p-2 bg-gray-800 text-white rounded">
+              <select class="w-full p-2 bg-gray-800 text-white rounded" v-model="searchSelectedType">
                 <option value="">Tous les types</option>
                 <option value="aquatique">Aquatique</option>
                 <option value="terrestre">Terrestre</option>
@@ -299,13 +300,6 @@
         // ]);
 
 
-//         5. Affichage et gestion de l'onglet "Filtres"
-// Nom de l’issue : Implémentation de l'affichage de l'onglet "Filtres"
-// Nom du commit : feat: implement filters tab display
-// Objectif : Implémenter la fonctionnalité de l'onglet "Filtres", permettant à l’utilisateur de basculer entre l’ajout de monstres et les filtres.
-// Détails : Utiliser une propriété isFiltersTabActive pour afficher ou masquer l'onglet correspondant via des directives conditionnelles (utiliser les classes css déjà présentes pour l'onglet ajout).
-
-
         Vue.createApp({
           data() {
             return {
@@ -323,6 +317,8 @@
                 },
                 isEditing: false,
                 isFiltersTabActive: false,
+                searchQuery: "", // Ici on stocke la chaîne de recherche
+                searchSelectedType: "",
                 
                 images: [
                     "documents/images/abyssalshark.png",
@@ -381,21 +377,20 @@
                 this.isEditing = false;
             },
             randomItem() {
-                if (images.length === 0) {
+                if (this.images.length === 0) {
                     throw new Error("Vous avez atteint le nombre maximum de monstre, passer à la version Prenium!");
                 }
                 
-                const index = Math.floor(Math.random() * images.length);
-                const selectedItem = images[index];
+                const index = Math.floor(Math.random() * this.images.length);
+                const selectedItem = this.images[index];
                 
                 // Supprimer l'élément sélectionné de la liste
-                images.splice(index, 1);
+                this.images.splice(index, 1);
                 
                 return selectedItem;
             },
 
             deleteOneById(id) {
-              this.images = { ...this.inputMonster.selectedImage };
               this.monsters.splice(this.findIndexById(id), 1);
             },
 
@@ -431,14 +426,32 @@
           },
           computed: {
             sortedMonsters() {
-            return this.monsters.sort((a, b) => {
+              return this.filteredMonsters.sort((a, b) => {
               return a.name.localeCompare(b.name);
-            });
+              });
+            },
 
+            filteredMonsters() {
+              const query = this.searchQuery.toLowerCase(); // Conversion en minuscule pour la recherche
+              const queryType = this.searchSelectedType.toLowerCase(); // Conversion en minuscule pour la recherche
+
+
+              return this.monsters.filter((monster) => {
+             
+                const matchesName = monster.name
+                .toLowerCase()
+                .startsWith(query);
+
+                const matchesType = queryType === "" || monster.type
+                .toLowerCase()
+                .startsWith(queryType);
+
+                // Combine les deux filtres: nom et type
+                return matchesName && matchesType;
+              }); 
+            },
           },
 
-            
-          },
   
           watch: {
             monsters: {
