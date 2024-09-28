@@ -88,13 +88,13 @@
           </div>
         </header>
         <div class="flex">
-          <button class="tab-button active" v-if="!isEditing">Ajouter un Monstre</button>
-          <button class="tab-button active"  v-if="isEditing">Modifier un Monstre</button>
-          <button class="tab-button">Filtres</button>
+          <button :class="{'active': !isFiltersTabActive, 'tab-button': true}" @click.prevent="showAddMonster()" v-if="!isEditing">Ajouter un Monstre</button>
+          <button :class="{'active': !isFiltersTabActive, 'tab-button': true}"  @click.prevent="showAddMonster()" v-if="isEditing">Modifier un Monstre</button>
+          <button :class="{'active': isFiltersTabActive, 'tab-button': true}" @click.prevent="showFilters()">Filtres</button>
         </div>
 
         <!-- Contenu des onglets -->
-        <div id="form" class="tab-content active">
+        <div id="form" :class="{'active': !isFiltersTabActive, 'tab-content': true}">
           <h2 class="text-3xl monster-header mb-6" v-if="!isEditing">Ajouter un Monstre</h2>
           <h2 class="text-3xl monster-header mb-6" v-if="isEditing">Modifier un Monstre</h2>
           <form class="grid grid-cols-1 gap-4">
@@ -168,7 +168,7 @@
         </div>
 
         <!-- Contenu des filtres -->
-        <div id="filters" class="tab-content">
+        <div id="filters" :class="{'active': isFiltersTabActive, 'tab-content': true}">
           <h2 class="text-3xl monster-header mb-6">Filtres</h2>
           <form class="grid grid-cols-1 gap-4">
             <div>
@@ -299,7 +299,11 @@
         // ]);
 
 
-
+//         5. Affichage et gestion de l'onglet "Filtres"
+// Nom de l’issue : Implémentation de l'affichage de l'onglet "Filtres"
+// Nom du commit : feat: implement filters tab display
+// Objectif : Implémenter la fonctionnalité de l'onglet "Filtres", permettant à l’utilisateur de basculer entre l’ajout de monstres et les filtres.
+// Détails : Utiliser une propriété isFiltersTabActive pour afficher ou masquer l'onglet correspondant via des directives conditionnelles (utiliser les classes css déjà présentes pour l'onglet ajout).
 
 
         Vue.createApp({
@@ -318,6 +322,7 @@
                     
                 },
                 isEditing: false,
+                isFiltersTabActive: false,
                 
                 images: [
                     "documents/images/abyssalshark.png",
@@ -411,6 +416,16 @@
             updateOneById(id) {
               this.monsters[this.findIndexById(id)] = { ...this.inputMonster };
               this.resetForm();
+            },
+            showFilters() {
+              this.isFiltersTabActive = true; // mode d'affichage des filtres
+             
+            },
+
+            showAddMonster() {
+              this.isFiltersTabActive = false; // mode d'affichage d'ajout/modification d'un monstre
+            
+
             },
 
           },
