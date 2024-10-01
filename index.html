@@ -88,15 +88,39 @@
           </div>
         </header>
         <div class="flex">
-          <button :class="{'active': !isFiltersTabActive, 'tab-button': true}" @click.prevent="showAddMonster()" v-if="!isEditing">Ajouter un Monstre</button>
-          <button :class="{'active': !isFiltersTabActive, 'tab-button': true}"  @click.prevent="showAddMonster()" v-if="isEditing">Modifier un Monstre</button>
-          <button :class="{'active': isFiltersTabActive, 'tab-button': true}" @click.prevent="showFilters()">Filtres</button>
+          <button
+            :class="{'active': !isFiltersTabActive, 'tab-button': true}"
+            @click.prevent="showAddMonster()"
+            v-if="!isEditing"
+          >
+            Ajouter un Monstre
+          </button>
+          <button
+            :class="{'active': !isFiltersTabActive, 'tab-button': true}"
+            @click.prevent="showAddMonster()"
+            v-if="isEditing"
+          >
+            Modifier un Monstre
+          </button>
+          <button
+            :class="{'active': isFiltersTabActive, 'tab-button': true}"
+            @click.prevent="showFilters()"
+          >
+            Filtres
+          </button>
         </div>
 
         <!-- Contenu des onglets -->
-        <div id="form" :class="{'active': !isFiltersTabActive, 'tab-content': true}">
-          <h2 class="text-3xl monster-header mb-6" v-if="!isEditing">Ajouter un Monstre</h2>
-          <h2 class="text-3xl monster-header mb-6" v-if="isEditing">Modifier un Monstre</h2>
+        <div
+          id="form"
+          :class="{'active': !isFiltersTabActive, 'tab-content': true}"
+        >
+          <h2 class="text-3xl monster-header mb-6" v-if="!isEditing">
+            Ajouter un Monstre
+          </h2>
+          <h2 class="text-3xl monster-header mb-6" v-if="isEditing">
+            Modifier un Monstre
+          </h2>
           <form class="grid grid-cols-1 gap-4">
             <div>
               <label class="block mb-2">Nom du Monstre</label>
@@ -141,7 +165,10 @@
 
             <div>
               <label class="block mb-2">Type de Monstre</label>
-              <select class="w-full p-2 bg-gray-800 text-white rounded" v-model="inputMonster.type">
+              <select
+                class="w-full p-2 bg-gray-800 text-white rounded"
+                v-model="inputMonster.type"
+              >
                 <option value="aquatique">Aquatique</option>
                 <option value="terrestre">Terrestre</option>
                 <option value="volant">Volant</option>
@@ -168,7 +195,10 @@
         </div>
 
         <!-- Contenu des filtres -->
-        <div id="filters" :class="{'active': isFiltersTabActive, 'tab-content': true}">
+        <div
+          id="filters"
+          :class="{'active': isFiltersTabActive, 'tab-content': true}"
+        >
           <h2 class="text-3xl monster-header mb-6">Filtres</h2>
           <form class="grid grid-cols-1 gap-4">
             <div>
@@ -189,6 +219,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Min PV"
+                  v-model.number="pvMin"
                 />
               </div>
               <div>
@@ -197,6 +228,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Max PV"
+                  v-model.number="pvMax"
                 />
               </div>
             </div>
@@ -208,6 +240,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Min Attaque"
+                  v-model.number="attaqueMin"
                 />
               </div>
               <div>
@@ -216,13 +249,17 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Max Attaque"
+                  v-model.number="attaqueMax"
                 />
               </div>
             </div>
 
             <div>
               <label class="block mb-2">Type de Monstre</label>
-              <select class="w-full p-2 bg-gray-800 text-white rounded" v-model="searchSelectedType">
+              <select
+                class="w-full p-2 bg-gray-800 text-white rounded"
+                v-model="searchSelectedType"
+              >
                 <option value="">Tous les types</option>
                 <option value="aquatique">Aquatique</option>
                 <option value="terrestre">Terrestre</option>
@@ -239,16 +276,14 @@
       <section class="w-2/3 p-6">
         <h2 class="text-3xl monster-header mb-6">Monstres Actuels</h2>
         <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            
           <!-- Carte de monstre -->
-        
-            <li
+
+          <li
             class="monster-card bg-gray-700 rounded-lg shadow-lg p-6"
             data-monster-type="aquatique"
             v-for="monster in sortedMonsters"
-            :key="monster.id">
-          
-
+            :key="monster.id"
+          >
             <img
               :src="monster.selectedImage"
               class="w-full h-40 object-cover rounded mb-4"
@@ -273,7 +308,7 @@
                 Supprimer
               </button>
             </div>
-         </li>
+          </li>
         </ul>
       </section>
     </div>
@@ -286,184 +321,208 @@
     </footer>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-//Initialisation du localStorage
-        // localStorage.monsters = JSON.stringify([
-        //   {
-        //     id: Date.now(),
-        //     name: "Aqualizzard",
-        //     description: "Monster Description",
-        //     pv: 50,
-        //     attaque: 50,
-        //     type: "aquatique",
-        //     selectedImage: 'documents/images/aqualizzard.png',
-        //   },
-        // ]);
+      //Initialisation du localStorage
+      // localStorage.monsters = JSON.stringify([
+      //   {
+      //     id: Date.now(),
+      //     name: "Aqualizzard",
+      //     description: "Monster Description",
+      //     pv: 50,
+      //     attaque: 50,
+      //     type: "aquatique",
+      //     selectedImage: "documents/images/aqualizzard.png",
+      //   },
+      // ]);
 
+      Vue.createApp({
+        data() {
+          return {
+            //Aller chercher ce qu'il y a dans le localstorage ou prendre un tableau indexés vide!
+            monsters: JSON.parse(localStorage.getItem("monsters")) || [],
+            inputMonster: {
+              id: null,
+              name: "",
+              description: "",
+              pv: "",
+              attaque: "",
+              type: "",
+              selectedImage: null,
+            },
+            isEditing: false, //
+            isFiltersTabActive: false,
+            searchQuery: "", // Ici on stocke la chaîne de recherche
+            searchSelectedType: "", // Ici on stocke le type sélectionner
+            pvMin: null, // Ajout du filtre PV Min
+            pvMax: null, // Ajout du filtre PV Max
+            attaqueMin: null, // Ajout du filtre Attaque Min
+            attaqueMax: null, // Ajout du filtre Attaque Max
 
-        Vue.createApp({
-          data() {
-            return {
-               //Aller chercher ce qu'il y a dans le localstorage ou prendre un tableau indexés vide!
-                monsters: JSON.parse(localStorage.getItem("monsters")) || [],
-                inputMonster: {
-                    id: null,
-                    name: "",
-                    description: "",
-                    pv: "",
-                    attaque: "",
-                    type: "",
-                    selectedImage: null,
-                    
-                },
-                isEditing: false,
-                isFiltersTabActive: false,
-                searchQuery: "", // Ici on stocke la chaîne de recherche
-                searchSelectedType: "",
-                
-                images: [
-                    "documents/images/abyssalshark.png",
-                    "documents/images/aquadragon.png",
-                    "documents/images/cosmoserpent.png",
-                    "documents/images/crystalunicorn.png",
-                    "documents/images/earthbear.png",
-                    "documents/images/earthelemental.png",
-                    "documents/images/firelion.png",
-                    "documents/images/flamedragon.png",
-                    "documents/images/flamesprite.png",
-                    "documents/images/frostelf.png",
-                    "documents/images/ghostphantom.png",
-                    "documents/images/icepixie.png",
-                    "documents/images/icewolf.png",
-                    "documents/images/infernopixie.png",
-                    "documents/images/lavagiant.png",
-                    "documents/images/lightningcheetah.png",
-                    "documents/images/magmatroll.png",
-                    "documents/images/mysticdragon.png",
-                    "documents/images/rockgolem.png",
-                    "documents/images/rockmountain.png",
-                    "documents/images/shadowbat.png",
-                    "documents/images/shadowmonkey.png",
-                    "documents/images/skyeagle.png",
-                    "documents/images/skyphoenix.png",
-                    "documents/images/spectralspirit.png",
-                    "documents/images/spiritshade.png",
-                    "documents/images/stonegiant.png",
-                    "documents/images/stormeagle.png",
-                    "documents/images/stormrider.png",
-                    "documents/images/terrawolf.png",
-                    "documents/images/thunderserpent.png",
-                    "documents/images/umbraroot.png",
-                    "documents/images/voidworm.png",
-                    "documents/images/windfalcon.png",
-                ],
-                
-            };
-          },
-          methods: {
-            addOne() {
-                this.inputMonster.id = Date.now();
-                this.inputMonster.selectedImage = this.randomItem(this.images)
-                this.monsters.push({ ...this.inputMonster });
-                this.resetForm();
-            },
-            resetForm() {
-                this.inputMonster.attaque = "";
-                this.inputMonster.description = "";
-                this.inputMonster.type = "";
-                this.inputMonster.pv = "";
-                this.inputMonster.name = "";
-                this.inputMonster.id = null;
-                this.inputMonster.selectedImage = null;
-                this.isEditing = false;
-            },
-            randomItem() {
-                if (this.images.length === 0) {
-                    throw new Error("Vous avez atteint le nombre maximum de monstre, passer à la version Prenium!");
-                }
-                
-                const index = Math.floor(Math.random() * this.images.length);
-                const selectedItem = this.images[index];
-                
-                // Supprimer l'élément sélectionné de la liste
-                this.images.splice(index, 1);
-                
-                return selectedItem;
-            },
+            imagesAvailable: [
+              "documents/images/abyssalshark.png",
+              "documents/images/aquadragon.png",
+              "documents/images/cosmoserpent.png",
+              "documents/images/crystalunicorn.png",
+              "documents/images/earthbear.png",
+              "documents/images/earthelemental.png",
+              "documents/images/firelion.png",
+              "documents/images/flamedragon.png",
+              "documents/images/flamesprite.png",
+              "documents/images/frostelf.png",
+              "documents/images/ghostphantom.png",
+              "documents/images/icepixie.png",
+              "documents/images/icewolf.png",
+              "documents/images/infernopixie.png",
+              "documents/images/lavagiant.png",
+              "documents/images/lightningcheetah.png",
+              "documents/images/magmatroll.png",
+              "documents/images/mysticdragon.png",
+              "documents/images/rockgolem.png",
+              "documents/images/rockmountain.png",
+              "documents/images/shadowbat.png",
+              "documents/images/shadowmonkey.png",
+              "documents/images/skyeagle.png",
+              "documents/images/skyphoenix.png",
+              "documents/images/spectralspirit.png",
+              "documents/images/spiritshade.png",
+              "documents/images/stonegiant.png",
+              "documents/images/stormeagle.png",
+              "documents/images/stormrider.png",
+              "documents/images/terrawolf.png",
+              "documents/images/thunderserpent.png",
+              "documents/images/umbraroot.png",
+              "documents/images/voidworm.png",
+              "documents/images/windfalcon.png",
+            ],
+            imagesUsed: [],
+          };
+        },
+        methods: {
+          addOne() {
+            this.inputMonster.id = Date.now();
+            this.inputMonster.selectedImage = this.randomItem(
+              this.imagesAvailable
+            );
 
-            deleteOneById(id) {
-              this.monsters.splice(this.findIndexById(id), 1);
-            },
-
-            findIndexById(id) {
-              return this.monsters.findIndex((monster) => monster.id === id);
-            },
-            
-
-            findOneById(id) {
-            return this.monsters.find((monster) => monster.id === id);
-            },
-
-            editOneById(id) {
-              this.inputMonster = { ...this.findOneById(id) };
-              this.isEditing = true; // mode modification
-            },
-
-            updateOneById(id) {
-              this.monsters[this.findIndexById(id)] = { ...this.inputMonster };
+            if (this.inputMonster.selectedImage) {
+              this.monsters.push({ ...this.inputMonster });
+              this.imagesUsed.push(this.inputMonster.selectedImage); // Ajouter l'image utilisée
               this.resetForm();
-            },
-            showFilters() {
-              this.isFiltersTabActive = true; // mode d'affichage des filtres
-             
-            },
-
-            showAddMonster() {
-              this.isFiltersTabActive = false; // mode d'affichage d'ajout/modification d'un monstre
-            
-
-            },
-
+            } else {
+              alert(
+                "Vous avez atteint le nombre maximum de monstre, passer à la version Prenium!"
+              );
+            }
           },
-          computed: {
-            sortedMonsters() {
-              return this.filteredMonsters.sort((a, b) => {
+          resetForm() {
+            this.inputMonster.attaque = "";
+            this.inputMonster.description = "";
+            this.inputMonster.type = "";
+            this.inputMonster.pv = "";
+            this.inputMonster.name = "";
+            this.inputMonster.id = null;
+            this.inputMonster.selectedImage = null;
+            this.isEditing = false;
+          },
+          randomItem(imagesArray) {
+            if (imagesArray.length === 0) {
+              return null;
+            }
+            const index = Math.floor(Math.random() * imagesArray.length);
+            const selectedItem = imagesArray[index];
+
+            // Supprimer l'image sélectionnée de `imagesAvailable`
+            this.imagesAvailable.splice(index, 1);
+
+            return selectedItem;
+          },
+
+          deleteOneById(id) {
+            const monsterIndex = this.findIndexById(id);
+            const monsterImage = this.monsters[monsterIndex].selectedImage;
+
+            // Remettre l'image dans `imagesAvailable` lorsqu'un monstre est supprimé
+            this.imagesAvailable.push(monsterImage);
+            this.imagesUsed = this.imagesUsed.filter(
+              (image) => image !== monsterImage //garde uniquement les images qui sont différentes de monsterImage".
+            );
+
+            this.monsters.splice(monsterIndex, 1);
+          },
+
+          findIndexById(id) {
+            return this.monsters.findIndex((monster) => monster.id === id);
+          },
+
+          findOneById(id) {
+            return this.monsters.find((monster) => monster.id === id);
+          },
+
+          editOneById(id) {
+            this.inputMonster = { ...this.findOneById(id) };
+            this.isEditing = true; // mode modification
+          },
+
+          updateOneById(id) {
+            this.monsters[this.findIndexById(id)] = { ...this.inputMonster };
+            this.resetForm();
+          },
+          showFilters() {
+            this.isFiltersTabActive = true; // mode d'affichage des filtres
+          },
+
+          showAddMonster() {
+            this.isFiltersTabActive = false; // mode d'affichage d'ajout/modification d'un monstre
+          },
+        },
+        computed: {
+          sortedMonsters() {
+            // On trie les monstres par ordre alphabétique
+            return this.filteredMonsters.sort((a, b) => {
               return a.name.localeCompare(b.name);
-              });
-            },
-
-            filteredMonsters() {
-              const query = this.searchQuery.toLowerCase(); // Conversion en minuscule pour la recherche
-              const queryType = this.searchSelectedType.toLowerCase(); // Conversion en minuscule pour la recherche
-
-
-              return this.monsters.filter((monster) => {
-             
-                const matchesName = monster.name
-                .toLowerCase()
-                .startsWith(query);
-
-                const matchesType = queryType === "" || monster.type
-                .toLowerCase()
-                .startsWith(queryType);
-
-                // Combine les deux filtres: nom et type
-                return matchesName && matchesType;
-              }); 
-            },
+            });
           },
 
-  
-          watch: {
-            monsters: {
-              handler(newValue, oldValue) {
-                //mettre à jour le localStorage
-                localStorage.setItem("monsters", JSON.stringify(newValue));
-              },
-              deep: true,
-            },
-            
+          filteredMonsters() {
+            const query = this.searchQuery.toLowerCase(); // Conversion en minuscule pour la recherche
+            const queryType = this.searchSelectedType.toLowerCase(); // Conversion en minuscule pour la recherche
+
+            return this.monsters.filter((monster) => {
+              // Filtrer par name
+              const matchesName = monster.name.toLowerCase().startsWith(query);
+
+              // Filtrer par type. Si aucun type n'est sélectionné (queryType === ""), tous les monstres sont pris en compte.
+              const matchesType =
+                queryType === "" ||
+                monster.type.toLowerCase().startsWith(queryType);
+
+              // Filtrer par PV. Si aucune valeur n'est entrée pour un champ ce filtre est ignoré grâce aux conditions. Si l'une des deux conditions est vraie, toute l'expression sera évaluée à true.
+              const matchesPv =
+                (this.pvMin === null || monster.pv >= this.pvMin) &&
+                (this.pvMax === null || monster.pv <= this.pvMax);
+
+              // Filtrer par Attaque
+              const matchesAttaque =
+                (this.attaqueMin === null ||
+                  monster.attaque >= this.attaqueMin) &&
+                (this.attaqueMax === null ||
+                  monster.attaque <= this.attaqueMax);
+
+              // Retourner seulement les monstres qui correspondent à tous les filtres
+              return matchesName && matchesType && matchesPv && matchesAttaque;
+            });
           },
-        }).mount("#app");
-      </script>
+        },
+
+        watch: {
+          monsters: {
+            handler(newValue, oldValue) {
+              //mettre à jour le localStorage
+              localStorage.setItem("monsters", JSON.stringify(newValue));
+            },
+            deep: true,
+          },
+        },
+      }).mount("#app");
+    </script>
   </body>
 </html>
